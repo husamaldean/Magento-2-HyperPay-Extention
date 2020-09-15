@@ -1,0 +1,46 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio" name="payment[method]" class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+        <label class="label" data-bind="attr: {'for': getCode()}">
+            <span data-bind="text: getTitle()"></span>
+            <img width="20%" style="margin-left:80%;"
+                 data-bind="attr: {src: getPaymentAcceptanceMarkSrc(), alt: 'Acceptance Mark'}" class="payment-icon" />
+        </label>
+    </div>
+
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() -->
+        <!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() -->
+            <!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div data-bind="visible: isInAction()">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="button"
+                        data-bind="
+                         click: openModal,
+                         attr: {id: getCode() + '-place',title: $t('Place Order')}
+                         ">
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+            <!-- ko if: isPaymentReady() -->
+            <div data-bind="attr: {id: getCode() + '-popup'}" style="display:none;">
+                <iframe
+                        data-bind="attr: {id: getCode() + '-iframe', src: BioLink()}, event: {load: iframeLoaded}, visible:iframeIsLoaded()"
+                        scrolling="no" height="300" width="100%" style="border: none">
+                    <p>Your browser does not support iframes.</p>
+                </iframe>
+            </div>
+
+            <!-- /ko -->
+        </div>
+    </div>
+</div>

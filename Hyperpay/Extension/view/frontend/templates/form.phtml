@@ -1,0 +1,58 @@
+<style>
+    <?php if($block->getLang()=="ar"){ ?>
+    .wpwl-wrapper-cardNumber,wpwl-group{
+        direction: ltr !important;
+    }
+    <?php } ?>
+    body{
+        background-color: transparent;
+    }
+    <?php echo $block->getCss();?>
+</style>
+<script>
+    var wpwlOptions = {
+        paymentTarget: "_top",
+        style: "<?php echo $block->getStyle();?>"
+    };
+    require(
+        [
+            'jquery'
+        ],
+        function(
+            jq331
+        ) {
+
+            jq331 = jQuery.noConflict(true);
+            wpwlOptions.locale= "<?php echo $block->getLang();?>",
+                wpwlOptions.onReady = function () {
+                    jq331('[name="form_key"]').remove();
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-qrcode').hide();
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile').hide();
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-group-paymentMode').hide();
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-group-mobilePhone').show();
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile .wpwl-control-radio-mobile').attr('checked', true);
+                    jq331('.wpwl-form-virtualAccount-STC_PAY .wpwl-wrapper-radio-mobile .wpwl-control-radio-mobile').trigger('click');
+                },
+         /*       wpwlOptions.Onbeforesubmitcard = function()
+                {
+                    /!*var serviceUrl,
+                        payload,
+                        paymentData = quote.paymentMethod();
+                        serviceUrl = urlBuilder.createUrl('/rest/V1/orders/create', {});
+                        payload = {
+                            cartId: quote.getQuoteId(),
+                            paymentMethod: {method: paymentData},
+                            billingAddress: quote.billingAddress()
+                        };
+                    storage.put(
+                        serviceUrl, JSON.stringify(payload)
+                    );*!/
+                },*/
+                wpwlOptions.applePay = {
+                    merchantCapabilities: ["supports3DS"],
+                    supportedNetworks: ["amex", "masterCard", "visa", "mada"]
+                }
+        });
+</script>
+<script src="<?php echo $block->getFormUrl(); ?>"></script>
+<form action="<?php echo $block->getShopperUrl(); ?>" class="paymentWidgets" data-brands="<?php echo $block->getPaymentBrand(); ?>"></form>
